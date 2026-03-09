@@ -9,23 +9,26 @@ from .exceptions import HunkApplyException, SubprocessException
 from .snippets import remove, which
 
 
-def apply_patch(diffs):
-    """Not ready for use yet"""
-    pass
+def _make_path(path, directory, strip):
+    return os.path.join(directory, path.split('/', strip)[-1])
 
-    if isinstance(diffs, patch.diff):
+
+def apply_patch(diffs, reverse=False, directory=os.getcwd(), strip=0,
+                use_patch=False):
+    if isinstance(diffs, patch.diffobj):
         diffs = [diffs]
 
     for diff in diffs:
         if diff.header.old_path == "/dev/null":
             text = []
         else:
-            with open(diff.header.old_path) as f:
+            with open(_make_path(diff.header.old_path, directory, strip)) as f:
                 text = f.read()
 
-        new_text = apply_diff(diff, text)
-        with open(diff.header.new_path, "w") as f:
-            f.write(new_text)
+        result = apply_diff(diff, text, reverse, use_patch)
+        new_text = result[0] if use_patch else result 
+        with open(_make_path(diff.header.new_path, directory, strip), "w") as f:
+            f.writelines(new_text)
 
 
 def _apply_diff_with_subprocess(diff, lines, reverse=False):
