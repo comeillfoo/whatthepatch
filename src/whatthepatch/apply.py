@@ -13,10 +13,40 @@ def _make_path(path, directory, strip):
     return os.path.join(directory, path.split('/', strip)[-1])
 
 
+def _apply_patch_with_subprocess(diffs, reverse=False, directory=os.getcwd(),
+                                 strip=0):
+    patchexec = which("patch")
+    if not patchexec:
+        raise SubprocessException("cannot find patch program", code=-1)
+
+    with tempfile.NamedTemporaryFile(mode="+a", prefix="wtp-") as fp:
+        for diff in diffs:
+            fp.write(diff.text)
+        fp.flush()
+
+        args = [
+            patchexec,
+            "-d", directory,
+            "--reverse" if reverse else "--forward",
+            "--quiet",
+            "-i", fp.name
+        ]
+        if strip > 0:
+            args.extend(("-p", str(strip)))
+
+        ret = subprocess.call(args)
+        if ret != 0:
+            raise SubprocessException(f"patch program failed {args}", code=ret)
+
+
 def apply_patch(diffs, reverse=False, directory=os.getcwd(), strip=0,
                 use_patch=False):
     if isinstance(diffs, patch.diffobj):
         diffs = [diffs]
+
+    if use_patch:
+        _apply_patch_with_subprocess(diffs, reverse, directory, strip)
+        return
 
     for diff in diffs:
         if diff.header.old_path == "/dev/null":

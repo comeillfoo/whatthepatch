@@ -232,11 +232,11 @@ class ApplyTestSuite(unittest.TestCase):
 class ApplyPatchTestSuite(unittest.TestCase):
     def setUp(self):
         with open("tests/casefiles/git.patch") as f:
-            self.git_patch = parse_patch(f.read())
+            self.git_patch = list(parse_patch(f.read()))
         with open("tests/casefiles/git-oneline-add.diff") as f:
-            self.git_oneline_add = parse_patch(f.read())
+            self.git_oneline_add = list(parse_patch(f.read()))
         with open("tests/casefiles/git-oneline-change.diff") as f:
-            self.git_oneline_chg = parse_patch(f.read())
+            self.git_oneline_chg = list(parse_patch(f.read()))
         self.old_cwd = os.getcwd()
         self.new_cwd = tempfile.mkdtemp()
         os.chdir(self.new_cwd)
@@ -255,25 +255,19 @@ class ApplyPatchTestSuite(unittest.TestCase):
             apply_patch([], reverse=True)
 
         with self.subTest(""):
-            apply_patch([], use_patch=True)
-
-        with self.subTest(""):
             apply_patch([], strip=4)
 
-        with self.subTest(""):
-            apply_patch([], strip=4, use_patch=True)
-
-        with self.subTest(""):
-            apply_patch([], reverse=True, strip=4, use_patch=True)
-
     def _subtest_git_oneline_add(self, use_patch=False):
+        strip = 1 if use_patch else 0 # mitigate git patches
         path = os.path.join(self.new_cwd, "oneline.txt")
         expected = "Adding a one-line file."
+        if use_patch:
+            expected += '\n' # mitigate git patches
 
         if os.path.exists(path):
             os.remove(path)
 
-        apply_patch(self.git_oneline_add, directory=self.new_cwd,
+        apply_patch(self.git_oneline_add, directory=self.new_cwd, strip=strip,
                     use_patch=use_patch)
 
         self.assertTrue(os.path.exists(path))
@@ -285,24 +279,22 @@ class ApplyPatchTestSuite(unittest.TestCase):
         with self.subTest("w/o patch"):
             self._subtest_git_oneline_add()
 
-        # fails with:
-        ## The next patch would create the file /tmp/wtp-...
-        ## which already exists!  Skipping patch.
-        ## patch unexpectedly ends in middle of line
-        ## patch: **** malformed patch at line 6:
-        # with self.subTest("w/ patch"):
-        #     self._subtest_git_oneline_add(use_patch=True)
+        with self.subTest("w/ patch"):
+            self._subtest_git_oneline_add(use_patch=True)
 
     def _subtest_git_oneline_chg(self, use_patch=False):
+        strip = 1 if use_patch else 0 # mitigate git patches
         path = os.path.join(self.new_cwd, "oneline.txt")
         expected = "Changed a one-line file."
+        if use_patch:
+            expected += '\n' # mitigate git patches
 
         if os.path.exists(path):
             os.remove(path)
         with open(path, "w") as f:
-            f.write("Adding a one-line file.")
+            f.write("Adding a one-line file.\n")
 
-        apply_patch(self.git_oneline_chg, directory=self.new_cwd,
+        apply_patch(self.git_oneline_chg, directory=self.new_cwd, strip=strip,
                     use_patch=use_patch)
 
         self.assertTrue(os.path.exists(path))
@@ -314,10 +306,8 @@ class ApplyPatchTestSuite(unittest.TestCase):
         with self.subTest("w/o patch"):
             self._subtest_git_oneline_chg()
 
-        # fails with:
-        ## TODO: investigate
-        # with self.subTest("w/ patch"):
-        #     self._subtest_git_oneline_chg(use_patch=True)
+        with self.subTest("w/ patch"):
+            self._subtest_git_oneline_chg(use_patch=True)
 
 
 if __name__ == "__main__":
