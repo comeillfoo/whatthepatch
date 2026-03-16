@@ -37,6 +37,12 @@ class ApplyTestSuite(unittest.TestCase):
         with open("tests/casefiles/efg") as f:
             self.efg = f.read().splitlines()
 
+        with open("tests/casefiles/git-oneline-add.diff") as f:
+            self.git_oneline_add = f.read()
+
+        with open("tests/casefiles/git-oneline-change.diff") as f:
+            self.git_oneline_chg = f.read()
+
     def test_truth(self):
         self.assertEqual(type(self.lao), list)
         self.assertEqual(type(self.tzu), list)
@@ -233,10 +239,13 @@ class ApplyPatchTestSuite(unittest.TestCase):
     def setUp(self):
         with open("tests/casefiles/git.patch") as f:
             self.git_patch = list(parse_patch(f.read()))
+
         with open("tests/casefiles/git-oneline-add.diff") as f:
             self.git_oneline_add = list(parse_patch(f.read()))
+
         with open("tests/casefiles/git-oneline-change.diff") as f:
             self.git_oneline_chg = list(parse_patch(f.read()))
+
         self.old_cwd = os.getcwd()
         self.new_cwd = tempfile.mkdtemp()
         os.chdir(self.new_cwd)
