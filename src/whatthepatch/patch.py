@@ -45,7 +45,7 @@ default_change = re.compile("^([><]) (.*)$")
 # Headers
 
 # git has a special index header and no end part
-git_diffcmd_header = re.compile("^diff --git a/(.+) b/(.+)$")
+git_diffcmd_header = re.compile("^diff --git (.+) (.+)$")
 git_header_index = re.compile(r"^index ([a-f0-9]+)..([a-f0-9]+) ?(\d*)$")
 git_header_old_line = re.compile("^--- (.+)$")
 git_header_new_line = re.compile(r"^\+\+\+ (.+)$")
@@ -133,11 +133,6 @@ def parse_scm_header(text):
                 if res:
                     old_path = res.old_path
                     new_path = res.new_path
-                    if old_path.startswith("a/"):
-                        old_path = old_path[2:]
-
-                    if new_path.startswith("b/"):
-                        new_path = new_path[2:]
 
                     return header(
                         index_path=res.index_path,
@@ -166,7 +161,7 @@ def parse_diff_header(text):
         (diffcmd_header, parse_diffcmd_header),
         # TODO:
         # git_header can handle version-less unified headers, but
-        # will trim a/ and b/ in the paths if they exist...
+        # will not trim a/ and b/ in the paths if they exist...
         (git_header_new_line, parse_git_header),
     ]
 
@@ -240,11 +235,6 @@ def parse_git_header(text):
             new_path = binary.group(2)
 
         if old_path and new_path:
-            if old_path.startswith("a/"):
-                old_path = old_path[2:]
-
-            if new_path.startswith("b/"):
-                new_path = new_path[2:]
             return header(
                 index_path=None,
                 old_path=old_path,
@@ -256,12 +246,6 @@ def parse_git_header(text):
     # if we go through all of the text without finding our normal info,
     # use the cmd if available
     if cmd_old_path and cmd_new_path and old_version and new_version:
-        if cmd_old_path.startswith("a/"):
-            cmd_old_path = cmd_old_path[2:]
-
-        if cmd_new_path.startswith("b/"):
-            cmd_new_path = cmd_new_path[2:]
-
         return header(
             index_path=None,
             # wow, I kind of hate this:

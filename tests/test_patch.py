@@ -292,9 +292,9 @@ class PatchTestSuite(unittest.TestCase):
         csc_diff = diffobj(
             header=headerobj(
                 index_path="bugtrace/trunk/src/bugtrace/csc.py",
-                old_path="projects/bugs/bugtrace/trunk/src/bugtrace/csc.py",
+                old_path="a/projects/bugs/bugtrace/trunk/src/bugtrace/csc.py",
                 old_version=12783,
-                new_path="projects/bugs/bugtrace/trunk/src/bugtrace/csc.py",
+                new_path="b/projects/bugs/bugtrace/trunk/src/bugtrace/csc.py",
                 new_version=12784,
             ),
             changes=CSC_CHANGES,
@@ -305,9 +305,9 @@ class PatchTestSuite(unittest.TestCase):
         diffxplore_diff = diffobj(
             header=headerobj(
                 index_path=diffxplore_path,
-                old_path="projects/bugs/" + diffxplore_path,
+                old_path="a/projects/bugs/" + diffxplore_path,
                 old_version=12783,
-                new_path="projects/bugs/" + diffxplore_path,
+                new_path="b/projects/bugs/" + diffxplore_path,
                 new_version=12784,
             ),
             changes=DIFFXPLORE_CHANGES,
@@ -318,9 +318,9 @@ class PatchTestSuite(unittest.TestCase):
         bugxplore_diff = diffobj(
             header=headerobj(
                 index_path=bugexplore_path,
-                old_path="projects/bugs/" + bugexplore_path,
+                old_path="a/projects/bugs/" + bugexplore_path,
                 old_version=12783,
-                new_path="projects/bugs/" + bugexplore_path,
+                new_path="b/projects/bugs/" + bugexplore_path,
                 new_version=12784,
             ),
             changes=BUGXPLORE_CHANGES,
@@ -554,9 +554,9 @@ class PatchTestSuite(unittest.TestCase):
         novel_frame = diffobj(
             header=headerobj(
                 index_path=None,
-                old_path=novel_frame_path,
+                old_path="a/" + novel_frame_path,
                 old_version="aae63fe",
-                new_path=novel_frame_path,
+                new_path="b/" + novel_frame_path,
                 new_version="5abbc99",
             ),
             changes=novel_frame_changes,
@@ -570,9 +570,9 @@ class PatchTestSuite(unittest.TestCase):
         novel_pref_frame = diffobj(
             header=headerobj(
                 index_path=None,
-                old_path=novel_pref_frame_path,
+                old_path="a/" + novel_pref_frame_path,
                 old_version="a63b57e",
-                new_path=novel_pref_frame_path,
+                new_path="b/" + novel_pref_frame_path,
                 new_version="919f413",
             ),
             changes=[
@@ -606,7 +606,7 @@ class PatchTestSuite(unittest.TestCase):
                     index_path=None,
                     old_path="/dev/null",
                     old_version="0000000",
-                    new_path="oneline.txt",
+                    new_path="b/oneline.txt",
                     new_version="f56f98d",
                 ),
                 changes=[(None, 1, "Adding a one-line file.")],
@@ -628,9 +628,9 @@ class PatchTestSuite(unittest.TestCase):
             diffobj(
                 header=headerobj(
                     index_path=None,
-                    old_path="oneline.txt",
+                    old_path="a/oneline.txt",
                     old_version="f56f98d",
-                    new_path="oneline.txt",
+                    new_path="b/oneline.txt",
                     new_version="169ceeb",
                 ),
                 changes=[
@@ -654,7 +654,7 @@ class PatchTestSuite(unittest.TestCase):
             diffobj(
                 header=headerobj(
                     index_path=None,
-                    old_path="oneline.txt",
+                    old_path="a/oneline.txt",
                     old_version="169ceeb",
                     new_path="/dev/null",
                     new_version="0000000",
@@ -679,7 +679,7 @@ class PatchTestSuite(unittest.TestCase):
                     index_path=None,
                     old_path="/dev/null",
                     old_version="0000000",
-                    new_path="somefile.txt",
+                    new_path="b/somefile.txt",
                     new_version="e69de29",
                 ),
                 changes=[],
@@ -696,9 +696,9 @@ class PatchTestSuite(unittest.TestCase):
 
         expected = headerobj(
             index_path=None,
-            old_path="bugtrace/patch.py",
+            old_path="a/bugtrace/patch.py",
             old_version="8910dfd",
-            new_path="bugtrace/patch.py",
+            new_path="b/bugtrace/patch.py",
             new_version="456e34f",
         )
 
@@ -714,9 +714,9 @@ class PatchTestSuite(unittest.TestCase):
 
         expected = headerobj(
             index_path=None,
-            old_path="bugtrace/patch.py",
+            old_path="a/bugtrace/patch.py",
             old_version="18910dfd",
-            new_path="bugtrace/patch.py",
+            new_path="b/bugtrace/patch.py",
             new_version="2456e34f",
         )
 
@@ -734,7 +734,7 @@ class PatchTestSuite(unittest.TestCase):
             index_path=None,
             old_path="/dev/null",
             old_version="0000000",
-            new_path="project/media/i/asc.gif",
+            new_path="b/project/media/i/asc.gif",
             new_version="71e31ac",
         )
 
@@ -1157,9 +1157,9 @@ class PatchTestSuite(unittest.TestCase):
             diffobj(
                 header=headerobj(
                     index_path=None,
-                    old_path="src/org/mozilla/javascript/IRFactory.java",
+                    old_path="a/src/org/mozilla/javascript/IRFactory.java",
                     old_version=None,
-                    new_path="src/org/mozilla/javascript/IRFactory.java",
+                    new_path="b/src/org/mozilla/javascript/IRFactory.java",
                     new_version=None,
                 ),
                 changes=changes,
@@ -1521,9 +1521,9 @@ AaR2}S
         path = "net/bluetooth/6lowpan.c"
         expected = headerobj(
             index_path=None,
-            old_path=path,
+            old_path="a/" + path,
             old_version="357475cceec61b",
-            new_path=path,
+            new_path="b/" + path,
             new_version="9a75f9b00b5129",
         )
 
