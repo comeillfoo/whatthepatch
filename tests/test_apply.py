@@ -177,6 +177,54 @@ class ApplyTestSuite(unittest.TestCase):
         new_text = _apply(self.lao, diff_text)
         self.assertEqual(self.tzu, new_text)
 
+    def _subtest_git_oneline_add(self, use_patch):
+        with open('tests/casefiles/git-oneline-add.diff') as f:
+            diff_text = f.read()
+
+        actual = _apply([], diff_text, use_patch=use_patch)
+        if use_patch:
+            new_text, rejlines = actual
+            self.assertIsNone(rejlines)
+        else:
+            new_text = actual
+        self.assertEqual(['Adding a one-line file.'], new_text)
+
+    def _subtest_git_oneline_change(self, use_patch):
+        with open('tests/casefiles/git-oneline-change.diff') as f:
+            diff_text = f.read()
+
+        actual = _apply(['Adding a one-line file.'], diff_text,
+                        use_patch=use_patch)
+        if use_patch:
+            new_text, rejlines = actual
+            self.assertIsNone(rejlines)
+        else:
+            new_text = actual
+        self.assertEqual(['Changed a one-line file.'], new_text)
+
+    def _subtest_git_oneline_rm(self, use_patch):
+        with open('tests/casefiles/git-oneline-rm.diff') as f:
+            diff_text = f.read()
+
+        actual = _apply(['Changed a one-line file.'], diff_text,
+                        use_patch=use_patch)
+        if use_patch:
+            new_text, rejlines = actual
+            self.assertIsNone(rejlines)
+        else:
+            new_text = actual
+        self.assertEqual([], new_text)
+
+
+    def test_git(self):
+        for use_patch in (False, True):
+            with self.subTest('git-oneline-add', use_patch=use_patch):
+                self._subtest_git_oneline_add(use_patch)
+            with self.subTest('git-oneline-change', use_patch=use_patch):
+                self._subtest_git_oneline_change(use_patch)
+            with self.subTest('git-oneline-rm', use_patch=use_patch):
+                self._subtest_git_oneline_rm(use_patch)
+
 
 if __name__ == "__main__":
     unittest.main()
