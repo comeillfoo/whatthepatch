@@ -42,7 +42,7 @@ def _apply_diff_with_subprocess(diff, lines, reverse=False):
     rejfilepath = filepath + ".rej"
     patchfilepath = filepath + ".patch"
     with open(oldfilepath, "w") as f:
-        f.write("\n".join(lines) + "\n")
+        f.write("\n".join(lines) + "\n" if bool(lines) else '')
 
     with open(patchfilepath, "w") as f:
         f.write(diff.text)
